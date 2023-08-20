@@ -11,7 +11,7 @@
 
 ## <b>Requirements</b>
   * Raspberry Pi
-  * Void Linux PC
+  * Void Linux
 
 
 ## <b>Preparation</b>
@@ -27,7 +27,7 @@ xbps-install -S ncurses-devel autoconf automake m4 bison flex xz curl openssl-de
 
 ## <b>Reading</b>
 
-### Raspberry Pi
+### Raspberry Pi (first time reading should be done using this only)
 ```
 flashrom -p linux_spi:dev=/dev/spidev0.0,spispeed=1024
 flashrom -p linux_spi:dev=/dev/spidev0.0,spispeed=1024 -r flash1.bin
@@ -35,7 +35,7 @@ flashrom -p linux_spi:dev=/dev/spidev0.0,spispeed=1024 -r flash2.bin
 md5sum flash1.bin flash2.bin
 ```
 
-### Raspberry Pi
+### Void Linux (boot with iomem=relaxed)
 ```
 flashrom -p internal -r flash1.bin
 flashrom -p internal -r flash1.bin
@@ -71,10 +71,11 @@ cd ../../../
 ```
 ```
 cp config coreboot/.config
-cp cmos.default coreboot/src/mainboard/lenovo/x220/
+cp cmos.default coreboot/src/mainboard/lenovo/x220/cmos.default
 cp grub.cfg coreboot/grub.cfg
+cp coreboot.png coreboot/coreboot.png
 cp iosevka.pf2 coreboot/iosevka.pf2
-cp iosevka_minimal.pf2 coreboot/iosevka_minimal.pf2
+cp iosevka.minimal.pf2 coreboot/iosevka.minimal.pf2
 ```
 ```
 cd coreboot
@@ -91,8 +92,9 @@ cd ../../../
 ```
 ```
 cd coreboot
+util/cbfstool/cbfstool build/coreboot.rom add -n etc/coreboot.png -t raw -f coreboot.png
 util/cbfstool/cbfstool build/coreboot.rom add -n etc/iosevka.pf2 -t raw -f iosevka.pf2
-util/cbfstool/cbfstool build/coreboot.rom add -n etc/iosevka_minimal.pf2 -t raw -f iosevka_minimal.pf2
+util/cbfstool/cbfstool build/coreboot.rom add -n etc/iosevka.minimal.pf2 -t raw -f iosevka.minimal.pf2
 cp build/coreboot.rom ../
 cd ../
 ```
@@ -100,12 +102,12 @@ cd ../
 
 ## <b>Flashing</b>
 
-### Raspberry Pi
+### Raspberry Pi (first time writing should be done using this only)
 ```
 flashrom -p linux_spi:dev=/dev/spidev0.0,spispeed=1024 -w coreboot.rom
 ```
 
-### Void Linux
+### Void Linux (boot with iomem=relaxed)
 ```
 flashrom -p internal -w coreboot.rom --ifd --image bios
 ```
